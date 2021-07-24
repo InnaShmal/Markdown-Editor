@@ -1,0 +1,80 @@
+def plain(old_text):
+    return old_text + input('Text: ')
+
+
+def bold(old_text):
+    return old_text + f'**{input("Text: ")}**'
+
+
+def italic(old_text):
+    return old_text + f'*{input("Text: ")}*'
+
+
+def header(old_text):
+    while True:
+        level = int(input('Level: '))
+        if 6 >= level >= 1:
+            return old_text + f'{"#" * level} {input("Text: ")}\n'
+        print('The level should be within the range of 1 to 6')
+
+
+def link(old_text):
+    return old_text + f'[{input("Label: ")}]({input("URL: ")})'
+
+
+def inline_code(old_text):
+    return old_text + f'`{input("Text: ")}`'
+
+
+def list_(old_text, lst):
+    for i, el in enumerate(lst):
+        old_text += f'{el} {input(f"Row #{i + 1}: ")}\n'
+    return old_text
+
+
+def new_line(old_text):
+    return old_text + '\n'
+
+def conv_txt_file(old_text):
+    f = open('output.md', 'w+')
+    f.write(old_text)
+    f.close()
+
+markdown = ''
+while True:
+    feature = input('Choose a formatter: ')
+    if feature == '!done':
+        markdown = conv_txt_file(markdown)
+        break
+    elif feature == '!help':
+        print('Available formatters: plain bold italic header link inline-code ordered-list unordered-list new-line'
+              '\nSpecial commands: !help !done')
+        continue
+    elif feature == 'plain':
+        markdown = plain(markdown)
+    elif feature == 'bold':
+        markdown = bold(markdown)
+    elif feature == 'italic':
+        markdown = italic(markdown)
+    elif feature == 'header':
+        markdown = header(markdown)
+    elif feature == 'link':
+        markdown = link(markdown)
+    elif feature == 'inline-code':
+        markdown = inline_code(markdown)
+    elif feature == 'ordered-list' or feature == 'unordered-list':
+        while True:
+            row = int(input('Number of rows: '))
+            if row > 0:
+                if feature == 'ordered-list':
+                    markdown = list_(markdown, [str(x) + '.' for x in range(1, row + 1)])
+                else:
+                    markdown = list_(markdown, ['*'] * row)
+                break
+            print('The number of rows should be greater than zero')
+    elif feature == 'new-line':
+        markdown = new_line(markdown)
+    else:
+        print('Unknown formatter type or command')
+        continue
+    print(markdown)
